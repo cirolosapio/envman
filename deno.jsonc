@@ -1,0 +1,13 @@
+{
+	"tasks": {
+		"main": "deno run -A main.ts",
+		"compile": "deno compile -A main.ts",
+		"compile:win": "deno compile -A --target=x86_64-pc-windows-msvc main.ts"
+	},
+	"fmt": {
+		"lineWidth": 900,
+		"semiColons": false,
+		"singleQuote": true,
+		"useTabs": true
+	}
+}
