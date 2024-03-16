@@ -1,6 +1,6 @@
-import { Checkbox } from 'https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts'
-import { isDocker, isWsl, run } from './functions.ts'
-import { installDeno, installDockerEngine, installOhMyZsh, installStarship } from './softwares.ts'
+import { Checkbox, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts'
+import { isDocker, isWsl, selectWsl } from './functions.ts'
+import { installCarootOnWsl, installDeno, installDockerEngine, installMkcert, installMkcertWin, installOhMyZsh } from './softwares.ts'
 
 if (await isDocker()) {
 	console.log('running in docker')
@@ -10,31 +10,48 @@ if (await isDocker()) {
 
 	const softwares = await Checkbox.prompt({
 		message: 'Cosa vuoi installare?',
-		options: ['docker-engine', 'deno', 'ohmyzsh'],
+		options: ['docker-engine', 'deno', 'ohmyzsh', 'mkcert'],
 	})
 
-	if (softwares?.includes('docker-engine')) await installDockerEngine()
-	if (softwares?.includes('ohmyzsh')) await installOhMyZsh()
-	// if (softwares?.includes('starship')) await installStarship()
-	if (softwares?.includes('deno')) await installDeno()
+	if (softwares.includes('docker-engine')) await installDockerEngine()
+	if (softwares.includes('ohmyzsh')) await installOhMyZsh()
+	// if (softwares.includes('starship')) await installStarship()
+	if (softwares.includes('deno')) await installDeno()
+	if (softwares.includes('mkcert')) await installMkcert()
 } else {
 	console.log('running in powershell')
 
-	const res = await run(['wsl', '-l', '-v'], 'utf-16')
-
-	const wsls = []
-	for (const row of res.split('\r\n').slice(1)) {
-		const names = row.split(' ').filter(Boolean)
-		if (names.length === 0) continue
-		else if (names.length === 4) wsls.push(names[1])
-		else wsls.push(names[0])
-	}
-	console.log('🚀 ~ wsls:', wsls)
-
-	const target = Checkbox.prompt({
-		message: 'Seleziona una wsl',
-		options: wsls
+	const softwares = await Checkbox.prompt({
+		message: 'Cosa vuoi installare?',
+		options: ['envman (su wsl)', 'mkcert'],
 	})
-	
-	console.log('--- ~ target:', target)
+
+	if (softwares.includes('mkcert')) {
+		const caroot = await installMkcertWin()
+		const target = await selectWsl()
+		await installCarootOnWsl(caroot, target)
+	}
+
+	if (softwares.includes('envman (su wsl)')) {
+		const target = await selectWsl()
+
+		const p = new Deno.Command('wsl', { args: ['-d', target], stdin: 'piped', stdout: 'piped', stderr: 'piped' })
+
+		const child = p.spawn()
+
+		const w = child.stdin.getWriter()
+
+		await w.ready
+
+		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
+		const url = 'https://github.com/cirolosapio/envman/releases/download/latest/envman'
+		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
+		await w.write(new TextEncoder().encode(`chmod +x /home/$USERenvman\n`))
+
+		w.releaseLock()
+
+		await child.stdin.close()
+	}
+
+	await Confirm.prompt('finish!')
 }

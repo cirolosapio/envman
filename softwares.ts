@@ -1,4 +1,4 @@
-import { bash, exists, run, runn } from './functions.ts'
+import { bash, exists, ps, run, runn } from './functions.ts'
 
 export async function installDockerEngine() {
 	console.log('installing docker engine')
@@ -52,4 +52,30 @@ export async function installDeno() {
 
 export async function installStarship() {
 	await run(['sh', '-c', 'curl -sS https://starship.rs/install.sh | sh'])
+}
+
+export async function installMkcert() {
+	await run(`sudo apt-get -y update`.split(' '))
+	await run('sudo apt install -y libnss3-tools'.split(' '))
+	await run('curl -JLO https://dl.filippo.io/mkcert/latest?for=linux/amd64'.split(' '))
+	await runn('chmod +x mkcert-v*-linux-amd64')
+	await runn('sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert')
+	await runn('mkdir -p /home/$USER/.local/share/mkcert')
+}
+
+export async function installMkcertWin() {
+	await ps('irm get.scoop.sh | iex')
+	await ps('scoop install git')
+	await ps('scoop bucket add extras')
+	await ps('scoop install mkcert')
+	await ps('mkcert -install')
+	return (await ps('mkcert -CAROOT')).trim()
+}
+
+export async function installCarootOnWsl(path: string, target: string) {
+	const user = (await run(`wsl -d Ubuntu whoami`.split(' '))).trim()
+	const destination = `\\\\wsl.localhost\\${target}\\home\\${user}\\.local\\share\\mkcert\\`
+	await run(`wsl -d ${target} mkdir -p /home/$USER/.local/share/mkcert`.split(' '))
+	await ps(`cp ${path}\\rootCA.pem ${destination}`)
+	await ps(`cp ${path}\\rootCA-key.pem ${destination}`)
 }
