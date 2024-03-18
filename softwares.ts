@@ -73,7 +73,7 @@ export async function installMkcertWin() {
 }
 
 export async function installCarootOnWsl(path: string, target: string) {
-	const user = (await run(`wsl -d Ubuntu whoami`.split(' '))).trim()
+	const user = (await run(`wsl -d ${target} whoami`.split(' '))).trim()
 	const destination = `\\\\wsl.localhost\\${target}\\home\\${user}\\.local\\share\\mkcert\\`
 	await run(`wsl -d ${target} mkdir -p /home/$USER/.local/share/mkcert`.split(' '))
 	await ps(`cp ${path}\\rootCA.pem ${destination}`)
