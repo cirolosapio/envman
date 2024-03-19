@@ -1,2 +1,1 @@
-![wsl](https://github.com/cirolosapio/envman/assets/33943143/d884988a-4015-4bc2-8c1f-c3f17c21c9cf)
-
+![image](https://github.com/cirolosapio/envman/assets/33943143/37b06153-fcca-4bcf-a82c-da36bfcd1ca1)
