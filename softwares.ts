@@ -79,3 +79,13 @@ export async function installCarootOnWsl(path: string, target: string) {
 	await ps(`cp ${path}\\rootCA.pem ${destination}`)
 	await ps(`cp ${path}\\rootCA-key.pem ${destination}`)
 }
+
+export async function installCtop() {
+	await run(`sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop`.split(' '))
+	await run(`sudo chmod +x /usr/local/bin/ctop`.split(' '))
+}
+
+export async function installSshs() {
+	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.3.0/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
+	await run(`sudo chmod +x /usr/local/bin/sshs`.split(' '))
+}
