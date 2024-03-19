@@ -1,7 +1,6 @@
-
 import { Checkbox, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts'
 import { isDocker, isWsl, selectWsl } from './functions.ts'
-import { installCarootOnWsl, installDeno, installDockerEngine, installSshs, installMkcert, installCtop, installMkcertWin, installOhMyZsh } from './softwares.ts'
+import { installCarootOnWsl, installCtop, installDeno, installDockerEngine, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
 
 if (await isDocker()) {
 	console.log('running in docker')
@@ -15,7 +14,8 @@ if (await isDocker()) {
 			{ name: 'Docker Engine - open source containerization technology', value: 'docker-engine' },
 			{ name: 'Deno - Next-generation JavaScript runtime', value: 'deno' },
 			{ name: 'OhMyZsh - open source, community-driven framework for managing your zsh configuration', value: 'ohmyzsh' },
-			{ name: 'mkcert - A simple zero-config tool to make locally trusted development certificates with any names you\'d like', value: 'mkcert' },
+			{ name: "mkcert - A simple zero-config tool to make locally trusted development certificates with any names you'd like", value: 'mkcert' },
+			{ name: 'Starship - The minimal, blazing-fast, and infinitely customizable prompt for any shell!', value: 'starship' },
 			{ name: 'ctop - Top-like interface for container metrics', value: 'ctop' },
 			{ name: 'sshs - Terminal user interface for SSH', value: 'sshs' },
 		],
@@ -23,7 +23,7 @@ if (await isDocker()) {
 
 	if (softwares.includes('docker-engine')) await installDockerEngine()
 	if (softwares.includes('ohmyzsh')) await installOhMyZsh()
-	// if (softwares.includes('starship')) await installStarship()
+	if (softwares.includes('starship')) await installStarship()
 	if (softwares.includes('deno')) await installDeno()
 	if (softwares.includes('mkcert')) await installMkcert()
 	if (softwares.includes('ctop')) await installCtop()
@@ -34,7 +34,7 @@ if (await isDocker()) {
 		minOptions: 1,
 		message: 'Cosa vuoi installare?',
 		options: [
-			{ name: 'mkcert - A simple zero-config tool to make locally trusted development certificates with any names you\'d like', value: 'mkcert' },
+			{ name: "mkcert - A simple zero-config tool to make locally trusted development certificates with any names you'd like", value: 'mkcert' },
 			{ name: 'envman - this tool, but on a selected wsl', value: 'envman' },
 		],
 	})
@@ -57,7 +57,7 @@ if (await isDocker()) {
 		await w.ready
 
 		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
-		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.4/envman'
+		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.5/envman'
 		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
 		await w.write(new TextEncoder().encode(`chmod +x envman\n`))
 

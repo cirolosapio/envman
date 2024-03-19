@@ -30,14 +30,14 @@ export async function installOhMyZsh() {
 	await bash('curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh')
 
 	const plugins = ['zsh-autosuggestions', 'zsh-syntax-highlighting']
-	for (const plugin of plugins) await installPlugin(plugin)
+	for (const plugin of plugins) await installZshPlugin(plugin)
 	plugins.unshift('docker', 'copypath', 'copyfile', 'sudo', 'dirhistory')
 	await runn(`sed -i 's/plugins=(git)/plugins=(git ${plugins.join(' ')})/' /home/$USER/.zshrc`)
 
 	console.log('run "chsh -s $(which zsh)" to set as a default shell!')
 }
 
-async function installPlugin(plugin: string) {
+async function installZshPlugin(plugin: string) {
 	const path = `/home/$USER/.oh-my-zsh/custom/plugins/${plugin}`
 	if (!await exists(path)) {
 		console.log(`installing ${plugin}`)
@@ -48,10 +48,14 @@ async function installPlugin(plugin: string) {
 export async function installDeno() {
 	await run('sudo apt install unzip'.split(' '))
 	await run(['sh', '-c', 'curl -fsSL https://deno.land/install.sh | sh'])
+	const user = (await run(['whoami'])).trim()
+	await runn(`echo 'export DENO_INSTALL="/home/${user}/.deno"' >> ~/.zshrc`)
+	await runn(`echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.zshrc`)
 }
 
 export async function installStarship() {
-	await run(['sh', '-c', 'curl -sS https://starship.rs/install.sh | sh'])
+	await run(['sh', '-c', 'curl -sS https://starship.rs/install.sh | FORCE=true sh'])
+	await runn(`echo 'eval "$(starship init zsh)"' >> ~/.zshrc`)
 }
 
 export async function installMkcert() {
