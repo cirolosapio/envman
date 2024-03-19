@@ -1,6 +1,6 @@
 import { Checkbox, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts'
 import { isDocker, isWsl, selectWsl } from './functions.ts'
-import { installCarootOnWsl, installCtop, installDeno, installDockerEngine, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
+import { installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
 
 if (await isDocker()) {
 	console.log('running in docker')
@@ -18,6 +18,7 @@ if (await isDocker()) {
 			{ name: 'Starship - The minimal, blazing-fast, and infinitely customizable prompt for any shell!', value: 'starship' },
 			{ name: 'ctop - Top-like interface for container metrics', value: 'ctop' },
 			{ name: 'sshs - Terminal user interface for SSH', value: 'sshs' },
+			{ name: 'bottom - Yet another cross-platform graphical process/system monitor', value: 'bottom' },
 		],
 	})
 
@@ -28,6 +29,7 @@ if (await isDocker()) {
 	if (softwares.includes('mkcert')) await installMkcert()
 	if (softwares.includes('ctop')) await installCtop()
 	if (softwares.includes('sshs')) await installSshs()
+	if (softwares.includes('bottom')) await installBottom()
 } else {
 	const softwares = await Checkbox.prompt({
 		info: true,
@@ -57,7 +59,7 @@ if (await isDocker()) {
 		await w.ready
 
 		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
-		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.5/envman'
+		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.6/envman'
 		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
 		await w.write(new TextEncoder().encode(`chmod +x envman\n`))
 
