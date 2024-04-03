@@ -1,6 +1,6 @@
 import { Checkbox, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts'
 import { isDocker, isWsl, selectWsl } from './functions.ts'
-import { installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
+import { installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
 
 if (await isDocker()) {
 	console.log('running in docker')
@@ -19,6 +19,7 @@ if (await isDocker()) {
 			{ name: 'ctop - Top-like interface for container metrics', value: 'ctop' },
 			{ name: 'sshs - Terminal user interface for SSH', value: 'sshs' },
 			{ name: 'bottom - Yet another cross-platform graphical process/system monitor', value: 'bottom' },
+			{ name: 'Magento Cloud Cli - Command-line tool for managing Magento Commerce Cloud projects', value: 'mgc' },
 		],
 	})
 
@@ -30,6 +31,7 @@ if (await isDocker()) {
 	if (softwares.includes('ctop')) await installCtop()
 	if (softwares.includes('sshs')) await installSshs()
 	if (softwares.includes('bottom')) await installBottom()
+	if (softwares.includes('mgc')) await installMagentoCloudCli()
 } else {
 	const softwares = await Checkbox.prompt({
 		info: true,
@@ -59,7 +61,7 @@ if (await isDocker()) {
 		await w.ready
 
 		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
-		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.6/envman'
+		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.7/envman'
 		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
 		await w.write(new TextEncoder().encode(`chmod +x envman\n`))
 

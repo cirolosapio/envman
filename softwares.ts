@@ -99,3 +99,10 @@ export async function installBottom() {
 	await run(`sudo dpkg -i bottom_0.9.6_amd64.deb`.split(' '))
 	await run(`rm bottom_0.9.6_amd64.deb`.split(' '))
 }
+
+export async function installMagentoCloudCli() {
+	let cmd = `curl -sS https://accounts.magento.cloud/cli/installer | php`
+	const user = (await run(['whoami'])).trim()
+	if (await exists(`/home/${user}/.oh-my-zsh`)) cmd += ' -- --shell-type zsh'
+	await run(['sh', '-c', cmd])
+}
