@@ -36,8 +36,8 @@ export async function isDocker() {
 export async function run(cmds: string[], encoding: Encoding = 'utf-8') {
 	const [cmd, ...args] = cmds
 	const { code, stdout, stderr } = await (new Deno.Command(cmd, { args })).output()
-	if (code === 0) console.log(new TextDecoder(encoding).decode(stdout))
-	else console.log(`ERROR (${code}):`, new TextDecoder(encoding).decode(stderr))
+	// console.log(new TextDecoder(encoding).decode(stdout))
+	if (code !== 0) console.log(`ERROR COMMAND: ${cmds.join(' ')} (code: ${code}):`, new TextDecoder(encoding).decode(stderr))
 	return new TextDecoder(encoding).decode(stdout)
 }
 
@@ -74,4 +74,37 @@ export async function selectWsl() {
 	}
 
 	return await Select.prompt({ message: 'Seleziona una wsl', options })
+}
+
+export async function getUser(target?: string) {
+	return (await run(target ? `wsl -d ${target} whoami`.split(' ') : ['whoami'])).trim()
+}
+
+export async function isOhMyZshInstalled() {
+	return await exists(`/home/${await getUser()}/.oh-my-zsh`)
+}
+
+export async function isInstalled(tool: string) {
+	// return (await run(`which ${tool}`.split(' '))).trim() !== ''
+	const { code, stdout } = await (new Deno.Command('which', { args: [tool] })).output()
+	return code === 1 ? false : new TextDecoder().decode(stdout).trim() !== ''
+}
+
+export async function checkOption(tool: boolean): Promise<Record<'checked' | 'disabled', boolean>>
+export async function checkOption(tool: string, checked?: boolean): Promise<Record<'checked' | 'disabled', boolean>>
+export async function checkOption(tool: unknown, checked?: boolean): Promise<Record<'checked' | 'disabled', unknown>> {
+	let installed
+	if (typeof tool === 'string') installed = await isInstalled(tool)
+	else if (typeof tool === 'boolean') installed = tool
+	else throw new Error('tool is not a string/boolean')
+	return {
+		checked: checked ?? !installed,
+		disabled: installed,
+	}
+}
+
+export async function getJetBrainsGatewayVersion() {
+	for await (const { name } of Deno.readDir('/opt')) {
+		if (name.startsWith('JetBrainsGateway')) return name.split('-')[1]
+	}
 }
