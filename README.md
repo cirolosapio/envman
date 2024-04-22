@@ -1,6 +1,7 @@
 # envman
 
-![image](https://github.com/cirolosapio/envman/assets/33943143/37b06153-fcca-4bcf-a82c-da36bfcd1ca1)
+![image](https://github.com/cirolosapio/envman/assets/33943143/7a48a3bc-9997-4b8d-a1f8-fe52514ba35c)
+
 
 ### Install
 
