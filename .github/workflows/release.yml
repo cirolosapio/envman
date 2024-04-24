@@ -1,0 +1,29 @@
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+
+      - name: Compile Linux
+        run: deno task compile
+        
+      - name: Compile Windows
+        run: deno task compile:win
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          files: |
+            envman
+            envman.exe
