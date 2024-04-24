@@ -6,6 +6,6 @@
 ### Install
 
 ```
-sudo curl -L https://github.com/cirolosapio/envman/releases/download/v0.0.8/envman -o /usr/local/bin/envman
+sudo curl -L https://github.com/cirolosapio/envman/releases/download/v0.0.9/envman -o /usr/local/bin/envman
 sudo chmod +x /usr/local/bin/envman
 ```

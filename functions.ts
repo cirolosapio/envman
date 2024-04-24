@@ -91,15 +91,15 @@ export async function isInstalled(tool: string) {
 }
 
 export async function checkOption(tool: boolean): Promise<Record<'checked' | 'disabled', boolean>>
-export async function checkOption(tool: string, checked?: boolean): Promise<Record<'checked' | 'disabled', boolean>>
-export async function checkOption(tool: unknown, checked?: boolean): Promise<Record<'checked' | 'disabled', unknown>> {
+export async function checkOption(tool: string, checked?: boolean, disabled?: boolean): Promise<Record<'checked' | 'disabled', boolean>>
+export async function checkOption(tool: unknown, checked?: boolean, disabled?: boolean): Promise<Record<'checked' | 'disabled', unknown>> {
 	let installed
 	if (typeof tool === 'string') installed = await isInstalled(tool)
 	else if (typeof tool === 'boolean') installed = tool
 	else throw new Error('tool is not a string/boolean')
 	return {
 		checked: checked ?? !installed,
-		disabled: installed,
+		disabled: disabled ?? installed,
 	}
 }
 

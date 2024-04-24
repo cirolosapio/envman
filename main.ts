@@ -22,7 +22,7 @@ if (await isDocker()) {
 			{ name: 'bottom - Yet another cross-platform graphical process/system monitor', value: 'bottom', ...await checkOption('btm', false) },
 			{ name: 'Magento Cloud Cli - Command-line tool for managing Magento Commerce Cloud projects', value: 'mgc', ...await checkOption('mgc', false) },
 			{ name: 'Mage2Postman - Generate postman collection from Magento', value: 'mage2postman', ...await checkOption('mage2postman', false) },
-			{ name: 'JetBrains Gateway - Your single entry point to all remote development environments', value: 'jetbrains-gateway', ...await checkOption('gateway', false) },
+			{ name: 'JetBrains Gateway - Your single entry point to all remote development environments', value: 'jetbrains-gateway', ...await checkOption('gateway', false, false) },
 		],
 	})
 
@@ -66,7 +66,7 @@ if (await isDocker()) {
 		await w.ready
 
 		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
-		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.8/envman'
+		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.9/envman'
 		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
 		await w.write(new TextEncoder().encode(`chmod +x envman\n`))
 

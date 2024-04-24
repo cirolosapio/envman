@@ -134,9 +134,20 @@ export async function installJetBrainsGateway() {
 	const version = '2024.1.1'
 	const name = `JetBrainsGateway-${version}.tar.gz`
 	await run(`sudo apt-get -y update`.split(' '))
-	await Promise.all([
-		run(['sh', '-c', `sudo curl https://download-cdn.jetbrains.com/idea/gateway/${name} | sudo tar -xz -C /opt/`]),
-		run('sudo apt-get install -y libxrender-dev libxtst6 libxi6 libfreetype-dev xdg-utils'.split(' ')),
-	])
-	await run(`sudo ln -s /opt/JetBrainsGateway-${await getJetBrainsGatewayVersion()}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
+
+	const currentVersion = await getJetBrainsGatewayVersion()
+	if (
+		!await exists(`/opt/JetBrainsGateway-${currentVersion}`) ||
+		confirm(`Jetbrains Gateway (${currentVersion}) is installed. Do you want to reinstall?`)
+	) {
+		if (currentVersion) {
+			await Deno.remove(`/opt/JetBrainsGateway-${currentVersion}`)
+			await Deno.remove('/usr/local/bin/gateway')
+		}
+		await Promise.all([
+			run(['sh', '-c', `sudo curl https://download-cdn.jetbrains.com/idea/gateway/${name} | sudo tar -xz -C /opt/`]),
+			run('sudo apt-get install -y libxrender-dev libxtst6 libxi6 libfreetype-dev xdg-utils'.split(' ')),
+		])
+		await run(`sudo ln -s /opt/JetBrainsGateway-${await getJetBrainsGatewayVersion()}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
+	}
 }
