@@ -25,6 +25,7 @@ jobs:
           prerelease: true
           fail_on_unmatched_files: true
           generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             envman
             envman.exe
