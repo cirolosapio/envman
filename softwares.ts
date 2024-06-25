@@ -73,6 +73,7 @@ export async function installMkcert() {
 	await run('curl -JLO https://dl.filippo.io/mkcert/latest?for=linux/amd64'.split(' '))
 	await runn('chmod +x mkcert-v*-linux-amd64')
 	await runn('sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert')
+	await runn('rm mkcert-v*-linux-amd64')
 	await runn('mkdir -p /home/$USER/.local/share/mkcert')
 }
 
