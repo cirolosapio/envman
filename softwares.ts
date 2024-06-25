@@ -97,18 +97,21 @@ export async function installCarootOnWsl(path: string, target: string) {
 }
 
 export async function installCtop() {
+	// https://github.com/bcicen/ctop
 	console.log('installing ctop...')
 	await run(`sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/ctop`.split(' '))
 }
 
 export async function installSshs() {
+	// https://github.com/quantumsheep/sshs
 	console.log('installing sshs...')
 	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.3.0/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/sshs`.split(' '))
 }
 
 export async function installBottom() {
+	// https://github.com/ClementTsang/bottom
 	console.log('installing bottom...')
 	await run(`curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb`.split(' '))
 	await run(`sudo dpkg -i bottom_0.9.6_amd64.deb`.split(' '))
