@@ -131,7 +131,7 @@ export async function installMage2Postman() {
 
 export async function installJetBrainsGateway() {
 	console.log('installing JetBrains Gateway...')
-	const version = '2024.1.1'
+	const version = '2024.1.2'
 	const name = `JetBrainsGateway-${version}.tar.gz`
 	await run(`sudo apt-get -y update`.split(' '))
 
