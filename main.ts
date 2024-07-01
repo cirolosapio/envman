@@ -66,7 +66,7 @@ if (await isDocker()) {
 		await w.ready
 
 		await w.write(new TextEncoder().encode(`cd /home/$USER\n`))
-		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.11/envman'
+		const url = 'https://github.com/cirolosapio/envman/releases/download/v0.0.12/envman'
 		await w.write(new TextEncoder().encode(`curl -L ${url} -o envman\n`))
 		await w.write(new TextEncoder().encode(`chmod +x envman\n`))
 

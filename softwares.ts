@@ -1,6 +1,6 @@
 import { bash, exists, getJetBrainsGatewayVersion, getUser, isInstalled, ps, run, runn } from './functions.ts'
 
-export async function installDockerEngine() {
+export async function installDockerEngine () {
 	console.log('installing docker engine...')
 
 	// await run('curl -fsSL https://get.docker.com -o get-docker.sh'.split(' '))
@@ -25,7 +25,7 @@ export async function installDockerEngine() {
 	console.log('reopen bash')
 }
 
-export async function installOhMyZsh() {
+export async function installOhMyZsh () {
 	console.log('installing ohmyzsh...')
 
 	await run('sudo apt install -y zsh'.split(' '))
@@ -39,7 +39,7 @@ export async function installOhMyZsh() {
 	console.log('run "chsh -s $(which zsh)" to set as a default shell!')
 }
 
-async function installZshPlugin(plugin: string) {
+async function installZshPlugin (plugin: string) {
 	const path = `/home/$USER/.oh-my-zsh/custom/plugins/${plugin}`
 	if (!await exists(path)) {
 		console.log(`installing ohmyzsh plugin ${plugin}...`)
@@ -47,7 +47,7 @@ async function installZshPlugin(plugin: string) {
 	} else console.log(`${plugin} already installed`)
 }
 
-export async function installDeno() {
+export async function installDeno () {
 	console.log('installing deno...')
 	await run('sudo apt install unzip'.split(' '))
 	await run(['sh', '-c', 'curl -fsSL https://deno.land/install.sh | sh'])
@@ -59,14 +59,14 @@ export async function installDeno() {
 	])
 }
 
-export async function installStarship() {
+export async function installStarship () {
 	console.log('installing starship...')
 	await run(['sh', '-c', 'curl -sS https://starship.rs/install.sh | FORCE=true sh'])
 	if (await isInstalled('zsh')) await runn(`echo 'eval "$(starship init zsh)"' >> ~/.zshrc`)
 	else await runn(`echo 'eval "$(starship init bash)"' >> ~/.bashrc`)
 }
 
-export async function installMkcert() {
+export async function installMkcert () {
 	console.log('installing mkcert...')
 	await run(`sudo apt-get -y update`.split(' '))
 	await run('sudo apt install -y libnss3-tools'.split(' '))
@@ -77,7 +77,7 @@ export async function installMkcert() {
 	await runn('mkdir -p /home/$USER/.local/share/mkcert')
 }
 
-export async function installMkcertWin() {
+export async function installMkcertWin () {
 	console.log('installing mkcert...')
 	await ps('irm get.scoop.sh | iex')
 	await ps('scoop install git')
@@ -87,7 +87,7 @@ export async function installMkcertWin() {
 	return (await ps('mkcert -CAROOT')).trim()
 }
 
-export async function installCarootOnWsl(path: string, target: string) {
+export async function installCarootOnWsl (path: string, target: string) {
 	const user = await getUser(target)
 	const destination = `\\\\wsl.localhost\\${target}\\home\\${user}\\.local\\share\\mkcert\\`
 	await run(`wsl -d ${target} mkdir -p /home/$USER/.local/share/mkcert`.split(' '))
@@ -97,21 +97,21 @@ export async function installCarootOnWsl(path: string, target: string) {
 	])
 }
 
-export async function installCtop() {
+export async function installCtop () {
 	// https://github.com/bcicen/ctop
 	console.log('installing ctop...')
 	await run(`sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/ctop`.split(' '))
 }
 
-export async function installSshs() {
+export async function installSshs () {
 	// https://github.com/quantumsheep/sshs
 	console.log('installing sshs...')
-	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.3.0/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
+	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.4.1/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/sshs`.split(' '))
 }
 
-export async function installBottom() {
+export async function installBottom () {
 	// https://github.com/ClementTsang/bottom
 	console.log('installing bottom...')
 	await run(`curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb`.split(' '))
@@ -119,7 +119,7 @@ export async function installBottom() {
 	await run(`rm bottom_0.9.6_amd64.deb`.split(' '))
 }
 
-export async function installMagentoCloudCli() {
+export async function installMagentoCloudCli () {
 	console.log('installing magento-cloud-cli...')
 	if (!await isInstalled('php')) return console.log('php is required!')
 	let cmd = `curl -sS https://accounts.magento.cloud/cli/installer | php`
@@ -127,13 +127,13 @@ export async function installMagentoCloudCli() {
 	await run(['sh', '-c', cmd])
 }
 
-export async function installMage2Postman() {
+export async function installMage2Postman () {
 	console.log('installing mage2postman...')
 	await run(`sudo curl -L https://github.com/cirolosapio/mage2postman/releases/download/v0.0.2/mage2postman -o /usr/local/bin/mage2postman`.split(' '))
 	await run('sudo chmod +x /usr/local/bin/mage2postman'.split(' '))
 }
 
-export async function installJetBrainsGateway() {
+export async function installJetBrainsGateway () {
 	console.log('installing JetBrains Gateway...')
 	const version = '2024.1.2'
 	const name = `JetBrainsGateway-${version}.tar.gz`
