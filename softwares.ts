@@ -1,32 +1,25 @@
 import { bash, exists, getJetBrainsGatewayVersion, getUser, isInstalled, ps, run, runn } from './functions.ts'
+import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
+import { VERSION } from './main.ts'
 
-export async function installDockerEngine () {
-	console.log('installing docker engine...')
+export async function installDockerEngine() {
+	console.log(colors.blue('installing docker engine...'))
 
-	// await run('curl -fsSL https://get.docker.com -o get-docker.sh'.split(' '))
-	// await run('sudo sh ./get-docker.sh'.split(' '))
+	await run('curl -fsSL https://get.docker.com -o get-docker.sh'.split(' '))
+	await run('sudo sh ./get-docker.sh'.split(' '))
 
-	await run(`sudo apt-get -y update`.split(' '))
-	await run(`sudo apt-get -y install ca-certificates curl`.split(' '))
-	await run(`sudo install -m 0755 -d /etc/apt/keyrings`.split(' '))
-	await run(`sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc`.split(' '))
-	await run(`sudo chmod a+r /etc/apt/keyrings/docker.asc`.split(' '))
-	await bash('echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null')
-	await run(`sudo apt-get -y update`.split(' '))
-	await run(`sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`.split(' '))
-
-	// POST
 	await Promise.all([
 		bash('sudo usermod -aG docker $USER'),
 		run(`sudo systemctl enable docker.service`.split(' ')),
 		run(`sudo systemctl enable containerd.service`.split(' ')),
 	])
 
-	console.log('reopen bash')
+	console.log(colors.green('docker installed!\n'))
+	console.log(colors.bgYellow('reopen your terminal to use docker without sudo!'))
 }
 
-export async function installOhMyZsh () {
-	console.log('installing ohmyzsh...')
+export async function installOhMyZsh() {
+	console.log(colors.blue('installing ohmyzsh...'))
 
 	await run('sudo apt install -y zsh'.split(' '))
 	await bash('curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh')
@@ -36,19 +29,21 @@ export async function installOhMyZsh () {
 	plugins.unshift('docker', 'copypath', 'copyfile', 'sudo', 'dirhistory')
 	await runn(`sed -i 's/plugins=(git)/plugins=(git ${plugins.join(' ')})/' /home/$USER/.zshrc`)
 
-	console.log('run "chsh -s $(which zsh)" to set as a default shell!')
+	console.log(colors.bgYellow('run "chsh -s $(which zsh)" to set as a default shell!'))
+	console.log(colors.green('ohmyzsh installed!\n'))
 }
 
-async function installZshPlugin (plugin: string) {
+async function installZshPlugin(plugin: string) {
 	const path = `/home/$USER/.oh-my-zsh/custom/plugins/${plugin}`
 	if (!await exists(path)) {
-		console.log(`installing ohmyzsh plugin ${plugin}...`)
+		console.log(colors.blue(`installing ohmyzsh plugin ${plugin}...`))
 		await bash(`git clone https://github.com/zsh-users/${plugin} ${path}`)
-	} else console.log(`${plugin} already installed`)
+		console.log(colors.green(`ohmyzsh plugin ${plugin} installed!\n`))
+	} else console.log(colors.yellow(`${plugin} already installed`))
 }
 
-export async function installDeno () {
-	console.log('installing deno...')
+export async function installDeno() {
+	console.log(colors.blue('installing deno...'))
 	await run('sudo apt install unzip'.split(' '))
 	await run(['sh', '-c', 'curl -fsSL https://deno.land/install.sh | sh'])
 	const user = await getUser()
@@ -57,37 +52,40 @@ export async function installDeno () {
 		runn(`echo 'export DENO_INSTALL="/home/${user}/.deno"' >> ${rc_profile}`),
 		runn(`echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ${rc_profile}`),
 	])
+	console.log(colors.green(`deno installed!\n`))
 }
 
-export async function installStarship () {
-	console.log('installing starship...')
+export async function installStarship() {
+	console.log(colors.blue('installing starship...'))
 	await run(['sh', '-c', 'curl -sS https://starship.rs/install.sh | FORCE=true sh'])
 	if (await isInstalled('zsh')) await runn(`echo 'eval "$(starship init zsh)"' >> ~/.zshrc`)
 	else await runn(`echo 'eval "$(starship init bash)"' >> ~/.bashrc`)
+	console.log(colors.green(`starship installed!\n`))
 }
 
-export async function installMkcert () {
-	console.log('installing mkcert...')
-	await run(`sudo apt-get -y update`.split(' '))
+export async function installMkcert() {
+	console.log(colors.blue('installing mkcert...'))
 	await run('sudo apt install -y libnss3-tools'.split(' '))
 	await run('curl -JLO https://dl.filippo.io/mkcert/latest?for=linux/amd64'.split(' '))
 	await runn('chmod +x mkcert-v*-linux-amd64')
 	await runn('sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert')
 	await runn('rm mkcert-v*-linux-amd64')
 	await runn('mkdir -p /home/$USER/.local/share/mkcert')
+	console.log(colors.green(`mkcert installed!\n`))
 }
 
-export async function installMkcertWin () {
-	console.log('installing mkcert...')
+export async function installMkcertWin() {
+	console.log(colors.blue('installing mkcert...'))
 	await ps('irm get.scoop.sh | iex')
 	await ps('scoop install git')
 	await ps('scoop bucket add extras')
 	await ps('scoop install mkcert')
 	await ps('mkcert -install')
+	console.log(colors.green(`mkcert installed!\n`))
 	return (await ps('mkcert -CAROOT')).trim()
 }
 
-export async function installCarootOnWsl (path: string, target: string) {
+export async function installCarootOnWsl(path: string, target: string) {
 	const user = await getUser(target)
 	const destination = `\\\\wsl.localhost\\${target}\\home\\${user}\\.local\\share\\mkcert\\`
 	await run(`wsl -d ${target} mkdir -p /home/$USER/.local/share/mkcert`.split(' '))
@@ -95,49 +93,62 @@ export async function installCarootOnWsl (path: string, target: string) {
 		ps(`cp ${path}\\rootCA.pem ${destination}`),
 		ps(`cp ${path}\\rootCA-key.pem ${destination}`),
 	])
+	console.log(colors.green(`mkcert root certs successfully installed in ${target}!`))
 }
 
-export async function installCtop () {
+export async function installCtop() {
 	// https://github.com/bcicen/ctop
-	console.log('installing ctop...')
+	console.log(colors.blue('installing ctop...'))
 	await run(`sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/ctop`.split(' '))
+	console.log(colors.green(`ctop installed!\n`))
 }
 
-export async function installSshs () {
+export async function installSshs() {
 	// https://github.com/quantumsheep/sshs
-	console.log('installing sshs...')
+	console.log(colors.blue('installing sshs...'))
 	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.4.1/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/sshs`.split(' '))
+	console.log(colors.green(`sshs installed!\n`))
 }
 
-export async function installBottom () {
+export async function installBottom() {
 	// https://github.com/ClementTsang/bottom
-	console.log('installing bottom...')
+	console.log(colors.blue('installing bottom...'))
 	await run(`curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb`.split(' '))
 	await run(`sudo dpkg -i bottom_0.9.6_amd64.deb`.split(' '))
 	await run(`rm bottom_0.9.6_amd64.deb`.split(' '))
+	console.log(colors.green(`bottom installed!\n`))
 }
 
-export async function installMagentoCloudCli () {
-	console.log('installing magento-cloud-cli...')
-	if (!await isInstalled('php')) return console.log('php is required!')
+export async function installMagentoCloudCli() {
+	console.log(colors.blue('installing magento-cloud-cli...'))
+	if (!await isInstalled('php')) return console.log(colors.red('magento-cloud-cli: php is required!'))
 	let cmd = `curl -sS https://accounts.magento.cloud/cli/installer | php`
 	if (await isInstalled('zsh')) cmd += ' -- --shell-type zsh'
 	await run(['sh', '-c', cmd])
+	console.log(colors.green(`magento-cloud-cli installed!\n`))
 }
 
-export async function installMage2Postman () {
-	console.log('installing mage2postman...')
+export async function installMage2Postman() {
+	console.log(colors.blue('installing mage2postman...'))
 	await run(`sudo curl -L https://github.com/cirolosapio/mage2postman/releases/download/v0.0.2/mage2postman -o /usr/local/bin/mage2postman`.split(' '))
 	await run('sudo chmod +x /usr/local/bin/mage2postman'.split(' '))
+	console.log(colors.green(`mage2postman installed!\n`))
 }
 
-export async function installJetBrainsGateway () {
-	console.log('installing JetBrains Gateway...')
+export async function installEnvman() {
+	console.log(colors.blue('installing evnman...'))
+	await run('sudo rm /usr/local/bin/envman'.split(' '))
+	await run(`sudo curl -L https://github.com/cirolosapio/envman/releases/download/${VERSION}/envman -o /usr/local/bin/envman`.split(' '))
+	await run('sudo chmod +x /usr/local/bin/envman'.split(' '))
+	console.log(colors.green(`evnman installed!\n`))
+}
+
+export async function installJetBrainsGateway() {
+	console.log(colors.blue('installing JetBrains Gateway...'))
 	const version = '2024.1.2'
 	const name = `JetBrainsGateway-${version}.tar.gz`
-	await run(`sudo apt-get -y update`.split(' '))
 
 	const currentVersion = await getJetBrainsGatewayVersion()
 	if (
@@ -153,5 +164,6 @@ export async function installJetBrainsGateway () {
 			run('sudo apt-get install -y libxrender-dev libxtst6 libxi6 libfreetype-dev xdg-utils'.split(' ')),
 		])
 		await run(`sudo ln -s /opt/JetBrainsGateway-${await getJetBrainsGatewayVersion()}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
+		console.log(colors.green(`JetBrains Gateway installed!\n`))
 	}
 }
