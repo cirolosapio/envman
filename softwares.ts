@@ -145,8 +145,8 @@ export async function installJetBrainsGateway () {
 		confirm(`Jetbrains Gateway (${currentVersion}) is installed. Do you want to reinstall?`)
 	) {
 		if (currentVersion) {
-			await Deno.remove(`/opt/JetBrainsGateway-${currentVersion}`)
-			await Deno.remove('/usr/local/bin/gateway')
+			await run(`sudo rm -rf /opt/JetBrainsGateway-${currentVersion}`.split(' '))
+			await run(`sudo rm -rf /usr/local/bin/gateway`.split(' '))
 		}
 		await Promise.all([
 			run(['sh', '-c', `sudo curl https://download-cdn.jetbrains.com/idea/gateway/${name} | sudo tar -xz -C /opt/`]),
