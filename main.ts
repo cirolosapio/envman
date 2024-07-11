@@ -1,9 +1,9 @@
 import { Checkbox, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
-import { installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSshs, installStarship } from './softwares.ts'
+import { installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.0.14'
+export const VERSION = 'v0.0.15'
 
 async function main() {
 	if (await isDocker()) {
@@ -14,7 +14,7 @@ async function main() {
 			info: true,
 			minOptions: 1,
 			message: 'Select the softwares to install',
-			maxRows: 11,
+			maxRows: 13,
 			options: [
 				{ name: 'Docker Engine - open source containerization technology', value: 'docker-engine', ...await checkOption('docker') },
 				{ name: 'OhMyZsh - open source, community-driven framework for managing your zsh configuration', value: 'ohmyzsh', ...await checkOption(await isOhMyZshInstalled()) },
@@ -24,6 +24,7 @@ async function main() {
 				{ name: 'ctop - Top-like interface for container metrics', value: 'ctop', ...await checkOption('ctop', false) },
 				{ name: 'sshs - Terminal user interface for SSH', value: 'sshs', ...await checkOption('sshs', false) },
 				{ name: 'bottom - Yet another cross-platform graphical process/system monitor', value: 'bottom', ...await checkOption('btm', false) },
+				{ name: 'sig - Interactive grep', value: 'sig', ...await checkOption('sig', false) },
 				{ name: 'Magento Cloud Cli - Command-line tool for managing Magento Commerce Cloud projects', value: 'mgc', ...await checkOption('mgc', false) },
 				{ name: 'Mage2Postman - Generate postman collection from Magento', value: 'mage2postman', ...await checkOption('mage2postman', false) },
 				{ name: 'JetBrains Gateway - Your single entry point to all remote development environments', value: 'jetbrains-gateway', ...await checkOption('gateway', false, false) },
@@ -37,6 +38,7 @@ async function main() {
 		if (softwares.includes('deno')) await installDeno()
 		if (softwares.includes('jetbrains-gateway')) await installJetBrainsGateway()
 		if (softwares.includes('bottom')) await installBottom()
+		if (softwares.includes('sig')) await installSig()
 		if (softwares.includes('mkcert')) toInstall.push(installMkcert())
 		if (softwares.includes('docker-engine')) toInstall.push(installDockerEngine())
 		if (softwares.includes('ctop')) toInstall.push(installCtop())

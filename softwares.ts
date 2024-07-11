@@ -167,3 +167,13 @@ export async function installJetBrainsGateway() {
 		console.log(colors.green(`JetBrains Gateway installed!\n`))
 	}
 }
+
+export async function installSig() {
+	// https://github.com/ynqa/sig
+	console.log(colors.blue('installing sig...'))
+	await run(`wget https://github.com/ynqa/sig/releases/download/v0.1.2/sigrs-x86_64-unknown-linux-gnu.tar.xz`.split(' '))
+	await run('tar -xf sigrs-x86_64-unknown-linux-gnu.tar.xz'.split(' '))
+	await run('sudo mv sigrs-x86_64-unknown-linux-gnu/sig /usr/local/bin/sig'.split(' '))
+	await run('rm -rf sigrs-x86_64-unknown-linux-gnu sigrs-x86_64-unknown-linux-gnu.tar.xz'.split(' '))
+	console.log(colors.green(`sig installed!\n`))
+}
