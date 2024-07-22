@@ -33,6 +33,21 @@ export async function isDocker() {
 	return await hasDockerEnv() || await hasDockerCGroup()
 }
 
+export async function isCurrentUserInDockerGroup() {
+	const groups = (await run(['groups'])).split(' ')
+	return groups.includes('docker')
+}
+
+export async function hasDockerDesktop() {
+	return await exists('/mnt/c/Program Files/Docker/Docker/Docker Desktop.exe')
+}
+
+export async function dockerServiceStartsAutomatically() {
+	if (await hasDockerDesktop()) return true
+	const status = await run(['systemctl', 'is-enabled', 'docker'])
+	return status.trim() === 'enabled'
+}
+
 export async function run(cmds: string[], encoding: Encoding = 'utf-8') {
 	const [cmd, ...args] = cmds
 	const { code, stdout, stderr } = await (new Deno.Command(cmd, { args })).output()
@@ -85,7 +100,6 @@ export async function isOhMyZshInstalled() {
 }
 
 export async function isInstalled(tool: string) {
-	// return (await run(`which ${tool}`.split(' '))).trim() !== ''
 	const { code, stdout } = await (new Deno.Command('which', { args: [tool] })).output()
 	return code === 1 ? false : new TextDecoder().decode(stdout).trim() !== ''
 }
@@ -107,4 +121,9 @@ export async function getJetBrainsGatewayVersion() {
 	for await (const { name } of Deno.readDir('/opt')) {
 		if (name.startsWith('JetBrainsGateway')) return name.split('-')[1]
 	}
+}
+
+export async function getLastEnvmanVersion() {
+	const tags = await fetch('https://api.github.com/repos/cirolosapio/envman/tags').then((res) => res.json())
+	return tags[0].name
 }
