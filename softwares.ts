@@ -1,6 +1,5 @@
 import { bash, exists, getJetBrainsGatewayVersion, getUser, hasDockerDesktop, isCurrentUserInDockerGroup, isInstalled, ps, run, runn } from './functions.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
-import { VERSION } from './main.ts'
 
 export async function installDockerEngine() {
 	console.log(colors.blue('installing docker engine...'))
@@ -146,12 +145,13 @@ export async function installMage2Postman() {
 	console.log(colors.green(`mage2postman installed ✔\n`))
 }
 
-export async function installEnvman() {
-	console.log(colors.blue('installing evnman...'))
+export async function installEnvman(version: string) {
+	console.log(colors.blue('updating evnman...'))
 	await run('sudo rm /usr/local/bin/envman'.split(' '))
-	await run(`sudo curl -L https://github.com/cirolosapio/envman/releases/download/${VERSION}/envman -o /usr/local/bin/envman`.split(' '))
+	await run(`sudo curl -L https://github.com/cirolosapio/envman/releases/download/${version}/envman -o /usr/local/bin/envman`.split(' '))
 	await run('sudo chmod +x /usr/local/bin/envman'.split(' '))
-	console.log(colors.green(`evnman installed ✔\n`))
+	console.log(colors.green(`evnman updated ✔\n`))
+	console.log(colors.underline('you can now re-run envman'))
 }
 
 export async function installJetBrainsGateway() {

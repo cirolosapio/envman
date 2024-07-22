@@ -3,7 +3,7 @@ import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
 import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.0.16'
+export const VERSION = 'v0.0.17'
 
 async function main() {
 	if (await isDocker()) {
@@ -43,7 +43,13 @@ async function main() {
 		const installed = []
 		const options: CheckboxOption<string>[] = []
 
-		if (lastEnvmanVersion !== VERSION) options.push({ name: colors.yellow('envman - Update needed!'), value: 'envman', checked: true })
+		if (lastEnvmanVersion !== VERSION) {
+			console.log(colors.yellow(`New version of envman available: ${lastEnvmanVersion}`))
+			if (await Confirm.prompt({ message: 'Do you want to update envman?', default: true })) {
+				await installEnvman(lastEnvmanVersion)
+				return
+			}
+		}
 
 		if (showDocker.disabled) {
 			installed.push('Docker Engine')
@@ -112,10 +118,9 @@ async function main() {
 			if (softwares.includes('mgc')) toInstall.push(installMagentoCloudCli())
 			if (softwares.includes('mage2postman')) toInstall.push(installMage2Postman())
 			if (softwares.includes('starship')) toInstall.push(installStarship())
-			if (softwares.includes('envman')) toInstall.push(installEnvman())
 			await Promise.all(toInstall)
 
-			if (await Confirm.prompt('Do you want to install another software?')) await main()
+			if (await Confirm.prompt({ message: 'Do you want to install another software?', default: false })) await main()
 		} else console.log(colors.green('All software are installed ✔'))
 	} else {
 		const softwares = await Checkbox.prompt({
@@ -155,7 +160,7 @@ async function main() {
 			await child.stdin.close()
 		}
 
-		if (await Confirm.prompt('Do you want to install another software?')) await main()
+		if (await Confirm.prompt({ message: 'Do you want to install another software?', default: false })) await main()
 	}
 }
 
