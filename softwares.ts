@@ -115,7 +115,7 @@ export async function installCtop() {
 export async function installSshs() {
 	// https://github.com/quantumsheep/sshs
 	console.log(colors.blue('installing sshs...'))
-	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/download/4.4.1/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
+	await run(`sudo wget https://github.com/quantumsheep/sshs/releases/latest/download/sshs-linux-amd64 -O /usr/local/bin/sshs`.split(' '))
 	await run(`sudo chmod +x /usr/local/bin/sshs`.split(' '))
 	console.log(colors.green(`sshs installed ✔\n`))
 }
@@ -180,7 +180,7 @@ export async function installJetBrainsGateway() {
 export async function installSig() {
 	// https://github.com/ynqa/sig
 	console.log(colors.blue('installing sig...'))
-	await run(`wget https://github.com/ynqa/sig/releases/download/v0.1.2/sigrs-x86_64-unknown-linux-gnu.tar.xz`.split(' '))
+	await run(`wget https://github.com/ynqa/sig/releases/latest/download/sigrs-x86_64-unknown-linux-gnu.tar.xz`.split(' '))
 	await run('tar -xf sigrs-x86_64-unknown-linux-gnu.tar.xz'.split(' '))
 	await run('sudo mv sigrs-x86_64-unknown-linux-gnu/sig /usr/local/bin/sig'.split(' '))
 	await run('rm -rf sigrs-x86_64-unknown-linux-gnu sigrs-x86_64-unknown-linux-gnu.tar.xz'.split(' '))
