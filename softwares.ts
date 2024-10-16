@@ -186,3 +186,13 @@ export async function installSig() {
 	await run('rm -rf sigrs-x86_64-unknown-linux-gnu sigrs-x86_64-unknown-linux-gnu.tar.xz'.split(' '))
 	console.log(colors.green(`sig installed ✔\n`))
 }
+
+export async function installLazygit() {
+	// https://github.com/jesseduffield/lazygit
+	console.log(colors.blue('installing lazygit...'))
+	await run(`wget https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_0.44.1_Linux_x86_64.tar.gz -O lazygit_Linux_x86_64.tar.gz`.split(' '))
+	await run('mkdir -p tmp && tar -xf lazygit_Linux_x86_64.tar.gz -C tmp'.split(' '))
+	await run('sudo install tmp/lazygit /usr/local/bin'.split(' '))
+	await run('rm -rf tmp lazygit_Linux_x86_64.tar.gz'.split(' '))
+	console.log(colors.green(`lazygit installed ✔\n`))
+}

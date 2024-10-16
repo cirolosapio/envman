@@ -1,9 +1,9 @@
 import { Checkbox, CheckboxOption, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
-import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
+import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.0.17'
+export const VERSION = 'v0.0.18'
 
 async function main() {
 	if (await isDocker()) {
@@ -20,6 +20,7 @@ async function main() {
 			showSshs,
 			showBtm,
 			showSig,
+			showLazygit,
 			showMgc,
 			showMage2postman,
 			showGateway,
@@ -34,6 +35,7 @@ async function main() {
 			checkOption('sshs', false),
 			checkOption('btm', false),
 			checkOption('sig', false),
+			checkOption('lazygit', false),
 			checkOption('mgc', false),
 			checkOption('mage2postman', false),
 			checkOption('gateway', false, false),
@@ -69,6 +71,9 @@ async function main() {
 
 		if (showSig.disabled) installed.push('sig')
 		else options.push({ name: 'sig - Interactive grep', value: 'sig', ...showSig })
+
+		if (showLazygit.disabled) installed.push('lazygit')
+		else options.push({ name: 'lazygit - simple terminal UI for git commands', value: 'lazygit', ...showLazygit })
 
 		if (showBtm.disabled) installed.push('bottom')
 		else options.push({ name: 'bottom - Yet another cross-platform graphical process/system monitor', value: 'bottom', ...showBtm })
@@ -110,6 +115,7 @@ async function main() {
 			if (softwares.includes('jetbrains-gateway')) await installJetBrainsGateway()
 			if (softwares.includes('bottom')) await installBottom()
 			if (softwares.includes('sig')) await installSig()
+if (softwares.includes('lazygit')) await installLazygit()
 			if (softwares.includes('docker-engine-post-install')) toInstall.push(dockerEnginePostInstall())
 			if (softwares.includes('mkcert')) toInstall.push(installMkcert())
 			if (softwares.includes('docker-engine')) toInstall.push(installDockerEngine())
