@@ -172,8 +172,9 @@ export async function installJetBrainsGateway() {
 			run(['sh', '-c', `sudo curl https://download-cdn.jetbrains.com/idea/gateway/${name} | sudo tar -xz -C /opt/`]),
 			run('sudo apt-get install -y libxrender-dev libxtst6 libxi6 libfreetype-dev xdg-utils'.split(' ')),
 		])
-		await run(`sudo ln -s /opt/JetBrainsGateway-${await getJetBrainsGatewayVersion()}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
-		console.log(colors.green(`JetBrains Gateway installed ✔\n`))
+		const newVersion = await getJetBrainsGatewayVersion()
+		await run(`sudo ln -s /opt/JetBrainsGateway-${newVersion}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
+		console.log(colors.green(`JetBrains Gateway (${newVersion}) installed ✔\n`))
 	}
 }
 
