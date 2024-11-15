@@ -115,7 +115,7 @@ async function main() {
 			if (softwares.includes('jetbrains-gateway')) await installJetBrainsGateway()
 			if (softwares.includes('bottom')) await installBottom()
 			if (softwares.includes('sig')) await installSig()
-if (softwares.includes('lazygit')) await installLazygit()
+			if (softwares.includes('lazygit')) await installLazygit()
 			if (softwares.includes('docker-engine-post-install')) toInstall.push(dockerEnginePostInstall())
 			if (softwares.includes('mkcert')) toInstall.push(installMkcert())
 			if (softwares.includes('docker-engine')) toInstall.push(installDockerEngine())
