@@ -156,7 +156,7 @@ export async function installEnvman(version: string) {
 
 export async function installJetBrainsGateway() {
 	console.log(colors.blue('installing JetBrains Gateway...'))
-	const version = '2024.1.2'
+	const version = '2024.3'
 	const name = `JetBrainsGateway-${version}.tar.gz`
 
 	const currentVersion = await getJetBrainsGatewayVersion()

@@ -3,7 +3,7 @@ import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
 import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.0.18'
+export const VERSION = 'v0.0.19'
 
 async function main() {
 	if (await isDocker()) {
