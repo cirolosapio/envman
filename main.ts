@@ -9,7 +9,7 @@ async function main() {
 	if (await isDocker()) {
 		console.log(colors.yellow('running in docker'))
 		console.log(colors.yellow('run this tool on windows/wsl'))
-	} else if (await isWsl()) {
+	} else if (await isWsl() || Deno.build.os === 'linux') {
 		const [
 			showDocker,
 			showOhmyzsh,
