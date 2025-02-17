@@ -156,8 +156,6 @@ export async function installEnvman(version: string) {
 
 export async function installJetBrainsGateway() {
 	console.log(colors.blue('installing JetBrains Gateway...'))
-	const version = '2024.3'
-	const name = `JetBrainsGateway-${version}.tar.gz`
 
 	const currentVersion = await getJetBrainsGatewayVersion()
 	if (
@@ -168,10 +166,15 @@ export async function installJetBrainsGateway() {
 			await run(`sudo rm -rf /opt/JetBrainsGateway-${currentVersion}`.split(' '))
 			await run(`sudo rm -rf /usr/local/bin/gateway`.split(' '))
 		}
+		const installEAP = confirm('Do you want to install the EAP version of JetBrains Gateway?')
+
+		const url = `https://data.services.jetbrains.com/products/download?code=GW&platform=linux&type=${installEAP ? 'eap' : 'release'}`
+
 		await Promise.all([
-			run(['sh', '-c', `sudo curl https://download-cdn.jetbrains.com/idea/gateway/${name} | sudo tar -xz -C /opt/`]),
+			run(['sh', '-c', `sudo curl -L "${url}" | sudo tar -xz -C /opt/`]),
 			run('sudo apt-get install -y libxrender-dev libxtst6 libxi6 libfreetype-dev xdg-utils'.split(' ')),
 		])
+
 		const newVersion = await getJetBrainsGatewayVersion()
 		await run(`sudo ln -s /opt/JetBrainsGateway-${newVersion}/bin/gateway.sh /usr/local/bin/gateway`.split(' '))
 		console.log(colors.green(`JetBrains Gateway (${newVersion}) installed ✔\n`))
