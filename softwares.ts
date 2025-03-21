@@ -200,3 +200,12 @@ export async function installLazygit() {
 	await run('rm -rf tmp lazygit_0.48.0_Linux_32-bit.tar.gz'.split(' '))
 	console.log(colors.green(`lazygit installed ✔\n`))
 }
+
+export async function installFnm() {
+	// https://github.com/Schniz/fnm
+	console.log(colors.blue('installing fnm...'))
+	await run('sudo apt install unzip'.split(' '))
+	await run(['sh', '-c', 'curl -fsSL https://fnm.vercel.app/install | bash'])
+	console.log(colors.bgYellow.bold('restart your terminal to use fnm!'))
+	console.log(colors.green(`fnm installed ✔\n`))
+}

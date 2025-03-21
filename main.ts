@@ -1,9 +1,9 @@
 import { Checkbox, CheckboxOption, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
-import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
+import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.1.1'
+export const VERSION = 'v0.1.2'
 
 async function main() {
 	if (await isDocker()) {
@@ -24,6 +24,7 @@ async function main() {
 			showMgc,
 			showMage2postman,
 			showGateway,
+			showFnm,
 			lastEnvmanVersion,
 		] = await Promise.all([
 			checkOption('docker'),
@@ -39,6 +40,7 @@ async function main() {
 			checkOption('mgc', false),
 			checkOption('mage2postman', false),
 			checkOption('gateway', false, false),
+			checkOption('fnm', false),
 			getLastEnvmanVersion(),
 		])
 
@@ -96,6 +98,9 @@ async function main() {
 		if (showOhmyzsh.disabled) installed.push('OhMyZsh')
 		else options.push({ name: 'OhMyZsh - open source, community-driven framework for managing your zsh configuration', value: 'ohmyzsh', ...showOhmyzsh })
 
+		if (showFnm.disabled) installed.push('fnm')
+		else options.push({ name: 'fnm - Fast and simple Node.js version manager, built in Rust', value: 'fnm', ...showFnm })
+
 		installed.forEach((software) => console.log(colors.green(` ✔ ${software} already installed`)))
 		console.log()
 
@@ -124,6 +129,7 @@ async function main() {
 			if (softwares.includes('mgc')) toInstall.push(installMagentoCloudCli())
 			if (softwares.includes('mage2postman')) toInstall.push(installMage2Postman())
 			if (softwares.includes('starship')) toInstall.push(installStarship())
+			if (softwares.includes('fnm')) toInstall.push(installFnm())
 			await Promise.all(toInstall)
 
 			if (await Confirm.prompt({ message: 'Do you want to install another software?', default: false })) await main()
