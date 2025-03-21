@@ -16,7 +16,7 @@ jobs:
 
       - name: Compile Linux
         run: deno task compile
-        
+
       - name: Compile Windows
         run: deno task compile:win
 

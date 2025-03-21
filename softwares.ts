@@ -209,3 +209,14 @@ export async function installFnm() {
 	console.log(colors.bgYellow.bold('restart your terminal to use fnm!'))
 	console.log(colors.green(`fnm installed ✔\n`))
 }
+
+export async function installOllama() {
+	// https://github.com/ollama/ollama
+	console.log(colors.blue('installing Ollama...'))
+	await run(['sh', '-c', 'curl -fsSL https://ollama.com/install.sh | sh'], undefined, true)
+	if (!confirm('Do you want to enable Ollama as a service?')) {
+		await run('sudo systemctl disable ollama'.split(' '))
+		await run('sudo systemctl stop ollama'.split(' '))
+	}
+	console.log(colors.green(`Ollama installed ✔\n`))
+}

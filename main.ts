@@ -1,9 +1,9 @@
 import { Checkbox, CheckboxOption, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
-import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installSig, installSshs, installStarship } from './softwares.ts'
+import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installOllama, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.1.2'
+export const VERSION = 'v0.1.3'
 
 async function main() {
 	if (await isDocker()) {
@@ -25,6 +25,7 @@ async function main() {
 			showMage2postman,
 			showGateway,
 			showFnm,
+			showOllama,
 			lastEnvmanVersion,
 		] = await Promise.all([
 			checkOption('docker'),
@@ -41,6 +42,7 @@ async function main() {
 			checkOption('mage2postman', false),
 			checkOption('gateway', false, false),
 			checkOption('fnm', false),
+			checkOption('ollama', false),
 			getLastEnvmanVersion(),
 		])
 
@@ -101,6 +103,9 @@ async function main() {
 		if (showFnm.disabled) installed.push('fnm')
 		else options.push({ name: 'fnm - Fast and simple Node.js version manager, built in Rust', value: 'fnm', ...showFnm })
 
+		if (showOllama.disabled) installed.push('ollama')
+		else options.push({ name: 'Ollama - Get up and running with Llama 3.3, DeepSeek-R1, Phi-4, Gemma 3, and other large language models.', value: 'ollama', ...showOllama })
+
 		installed.forEach((software) => console.log(colors.green(` ✔ ${software} already installed`)))
 		console.log()
 
@@ -130,6 +135,7 @@ async function main() {
 			if (softwares.includes('mage2postman')) toInstall.push(installMage2Postman())
 			if (softwares.includes('starship')) toInstall.push(installStarship())
 			if (softwares.includes('fnm')) toInstall.push(installFnm())
+			if (softwares.includes('ollama')) toInstall.push(installOllama())
 			await Promise.all(toInstall)
 
 			if (await Confirm.prompt({ message: 'Do you want to install another software?', default: false })) await main()
