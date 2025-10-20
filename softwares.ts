@@ -220,3 +220,12 @@ export async function installOllama() {
 	}
 	console.log(colors.green(`Ollama installed ✔\n`))
 }
+
+export async function installBat() {
+	// https://github.com/sharkdp/bat
+	console.log(colors.blue('installing bat...'))
+	await run('sudo apt install bat'.split(' '))
+	const rc_profile = await isInstalled('zsh') ? '~/.zshrc' : '~/.bashrc'
+	await runn(`echo 'alias bat="batcat"' >> ${rc_profile}`)
+	console.log(colors.green(`bat installed ✔\n`))
+}

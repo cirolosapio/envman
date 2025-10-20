@@ -1,7 +1,7 @@
 import { Checkbox, CheckboxOption, Confirm } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts'
 import { colors } from 'https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, hasDockerDesktop, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
-import { dockerEnginePostInstall, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installOllama, installSig, installSshs, installStarship } from './softwares.ts'
+import { dockerEnginePostInstall, installBat, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installOllama, installSig, installSshs, installStarship } from './softwares.ts'
 
 export const VERSION = 'v0.1.4'
 
@@ -25,6 +25,7 @@ async function main() {
 			showMage2postman,
 			showGateway,
 			showFnm,
+			showBat,
 			showOllama,
 			lastEnvmanVersion,
 		] = await Promise.all([
@@ -42,6 +43,7 @@ async function main() {
 			checkOption('mage2postman', false),
 			checkOption('gateway', false, false),
 			checkOption('fnm', false),
+			checkOption('bat', false),
 			checkOption('ollama', false),
 			getLastEnvmanVersion(),
 		])
@@ -103,6 +105,9 @@ async function main() {
 		if (showFnm.disabled) installed.push('fnm')
 		else options.push({ name: 'fnm - Fast and simple Node.js version manager, built in Rust', value: 'fnm', ...showFnm })
 
+		if (showBat.disabled) installed.push('bat')
+		else options.push({ name: 'bat - A cat(1) clone with wings', value: 'bat', ...showBat })
+
 		if (showOllama.disabled) installed.push('ollama')
 		else options.push({ name: 'Ollama - Get up and running with Llama 3.3, DeepSeek-R1, Phi-4, Gemma 3, and other large language models.', value: 'ollama', ...showOllama })
 
@@ -135,6 +140,7 @@ async function main() {
 			if (softwares.includes('mage2postman')) toInstall.push(installMage2Postman())
 			if (softwares.includes('starship')) toInstall.push(installStarship())
 			if (softwares.includes('fnm')) toInstall.push(installFnm())
+			if (softwares.includes('bat')) toInstall.push(installBat())
 			if (softwares.includes('ollama')) toInstall.push(installOllama())
 			await Promise.all(toInstall)
 
