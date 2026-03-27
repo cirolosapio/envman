@@ -3,7 +3,7 @@ import { dockerEnginePostInstall, installBat, installBottom, installCarootOnWsl,
 import { colors } from '@cliffy/ansi/colors'
 import { Checkbox, CheckboxOption, Confirm } from '@cliffy/prompt'
 
-export const VERSION = 'v0.1.5'
+export const VERSION = 'v0.2.0'
 
 async function main() {
 	if (await isDocker()) {
