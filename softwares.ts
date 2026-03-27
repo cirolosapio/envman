@@ -199,10 +199,10 @@ export async function installSig() {
 export async function installLazygit() {
 	// https://github.com/jesseduffield/lazygit
 	console.log(info('installing lazygit...'))
-	await run(`wget https://github.com/jesseduffield/lazygit/releases/download/v0.49.0/lazygit_0.49.0_Linux_32-bit.tar.gz -O lazygit_0.49.0_Linux_32-bit.tar.gz`.split(' '))
-	await run('mkdir -p tmp && tar -xf lazygit_0.49.0_Linux_32-bit.tar.gz -C tmp'.split(' '))
+	await run(`wget https://github.com/jesseduffield/lazygit/releases/download/v0.60.0/lazygit_0.60.0_linux_32-bit.tar.gz -O lazygit_0.60.0_Linux_32-bit.tar.gz`.split(' '))
+	await run('mkdir -p tmp && tar -xf lazygit_0.60.0_Linux_32-bit.tar.gz -C tmp'.split(' '))
 	await run('sudo install tmp/lazygit /usr/local/bin'.split(' '))
-	await run('rm -rf tmp lazygit_0.48.0_Linux_32-bit.tar.gz'.split(' '))
+	await run('rm -rf tmp lazygit_0.60.0_Linux_32-bit.tar.gz'.split(' '))
 	console.log(success('lazygit installed ✔\n'))
 }
 
