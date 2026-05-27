@@ -3,7 +3,7 @@ import { colors } from '@cliffy/ansi/colors'
 import { checkOption, dockerServiceStartsAutomatically, getLastEnvmanVersion, hasDockerDesktop, isCurrentUserInDockerGroup, isDocker, isOhMyZshInstalled, isWsl, run, selectWsl } from './functions.ts'
 import { dockerEnginePostInstall, installBat, installBottom, installCarootOnWsl, installCtop, installDeno, installDockerEngine, installEnvman, installFnm, installJetBrainsGateway, installLazygit, installMage2Postman, installMagentoCloudCli, installMkcert, installMkcertWin, installOhMyZsh, installOllama, installSig, installSshs, installStarship } from './softwares.ts'
 
-export const VERSION = 'v0.2.2'
+export const VERSION = 'v0.2.3'
 
 async function main() {
 	if (await isDocker()) {
