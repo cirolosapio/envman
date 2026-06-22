@@ -128,7 +128,7 @@ export async function installSshs() {
 export async function installBottom() {
 	// https://github.com/ClementTsang/bottom
 	console.log(info('installing bottom...'))
-	await run(`wget https://github.com/ClementTsang/bottom/releases/download/0.12.3/bottom_0.12.3-1_amd64.deb -O ./bottom_amd64.deb`.split(' '))
+	await run(`wget https://github.com/ClementTsang/bottom/releases/download/0.14.1/bottom_0.14.1-1_amd64.deb -O ./bottom_amd64.deb`.split(' '))
 	await run(`sudo dpkg -i bottom_amd64.deb`.split(' '))
 	await run(`rm -f bottom_amd64.deb`.split(' '))
 	console.log(success(`bottom installed ✔\n`))
